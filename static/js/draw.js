@@ -73,7 +73,9 @@ function drawData(processing){
 	second.setColor([223,97,204]);
 	second.setPosition(700,250);
 	second.drawAll(80);
-	second.draw();
+	second.drawContinue();
+
+	
 
 	var minute = new TimeSpiro(0,120,[34],[[6]],1)
 	minute.setType("m");
@@ -82,7 +84,9 @@ function drawData(processing){
 	minute.setColor([131,205,230]);
 	minute.setPosition(700,250);
 	minute.drawAll(80);
-	minute.draw();
+	minute.drawContinue();
+
+	
 
 	var hour = new TimeSpiro(0,144,[30],[[8]],1)
 	hour.setType("h");
@@ -91,19 +95,34 @@ function drawData(processing){
 	hour.setColor([145,230,131]);
 	hour.setPosition(700,250);
 	hour.drawAll(80);
-	hour.draw();
+	hour.drawContinue();
+
+
+
+
+
+
+
 /*
 	var test2 = new SpiroGraph(0,105,[24,80],[[5],[13,14,15]])
 	test2.setSpeed(0.01);
 	test2.draw();
 */
-	var spirotest = new WeatherSpiro(6,96,[52,76],[[1,2,3,4,5,6],[14,15,16,17,18,19]]);
-	//spirotest.drawAll();
-	spirotest.setPosition(200,250);
-	spirotest.drawSpecial();
-	//spirotest.initLegend();
+	var weather = new WeatherSpiro(6,96,[52,76],[[1,2,3,4,5,6],[14,15,16,17,18,19]],2);
+	//weather.drawAll();
+	weather.setPosition(400,200);
+	weather.drawSpecial();
+	//weather.initLegend();
 
 	
 	var spirom = new SpiroMove(200, 200, 100, 100, 100);
+	spirom.draw(0);
+
+	/*
+	var spirom2 = new SpiroMove(200, 200, 100, 100, 100);
+	spirom2.draw(1);
+	var spirom3 = new SpiroMove(200, 200, 100, 100, 100);
+	spirom3.draw(2);
+*/
 }
 

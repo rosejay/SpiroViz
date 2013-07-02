@@ -4,7 +4,6 @@
 var SpiroGraph = function(index, r1, r2, d, z, w){
 
 	this.zoom = z ? z : 1;
-	
 	var self = this;
 	this.outerRadius = r1*this.zoom;
 	this.innerRadius = r2;

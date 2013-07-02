@@ -23,7 +23,7 @@ var SpiroMove = function(x, y, radius_1, radius_2, point_distance){
 
 	this.interval;
 
-	
+
 	// canvas
 	this.$canvas = $("<canvas id='canvas"+this.index+"'></canvas>");
 	$("body").append(this.$canvas);
@@ -43,12 +43,11 @@ var SpiroMove = function(x, y, radius_1, radius_2, point_distance){
 		processing.frameRate(30);
 		processing.strokeWeight(self.strokeWeight);
 		self.processing = processing;
-		self.draw();
 	}
 
 }
 
-SpiroMove.prototype.draw = function() {
+SpiroMove.prototype.draw = function(index) {
 
 	var r1 = 0.0;
 	var incr = 0.05;
@@ -61,8 +60,17 @@ SpiroMove.prototype.draw = function() {
 			r1 = 0.0;
 
 		self.processing.background(255,0);
-		self.init(self.center_x, self.center_y, r1, 75, 64); 
-		self.drawIterations(1000, incr);
+		if(index == 0){
+			self.init(self.center_x, self.center_y, r1, 75, 64); 
+		}
+		else if(index == 1){
+			self.init(self.center_x, self.center_y, 75, r1, 64); 
+		}
+		else if(index == 2){
+			self.init(self.center_x, self.center_y, 75, 64, r1); 
+		}
+		
+		self.drawIterations(2000, incr);
 
 	}, 30);
 

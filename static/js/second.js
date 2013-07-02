@@ -1,9 +1,9 @@
 
 
 // class TimeSpiro
-var TimeSpiro = function(index, r1, r2, d, z){
+var TimeSpiro = function(index, r1, r2, d, z, w){
 
-	SpiroGraph.call(this, index, r1, r2, d, z);
+	SpiroGraph.call(this, index, r1, r2, d, z, w);
 
 	// data
 	this.initData(0);
@@ -31,6 +31,10 @@ TimeSpiro.prototype.setColor = function(color){
 	this.drawCLR["color1"] = color;
 	this.color = color;
 }
+TimeSpiro.prototype.getTheta = function(color){
+	
+}
+
 TimeSpiro.prototype.preDraw = function(alpha){
 
 	this.alpha = alpha ? alpha : 255;
@@ -70,7 +74,7 @@ TimeSpiro.prototype.drawAll = function(alpha){
 			for(var k = 0; k<this.nodeNum; k++){
 
 				this.theta = this.index[k] * this.anglePerNode - this.anglePerNode/2;
-				this.pointDistance[i][j] = tempDistance - 10 + Math.random() * 20;
+				//this.pointDistance[i][j] = tempDistance - 10 + Math.random() * 20;
 				for(var n = 0; n<this.steps; n++){
 					this.batchedLine(i,j);
 				}
@@ -119,10 +123,13 @@ TimeSpiro.prototype.drawNum = function(s,m,h){
 			var tempDistance = this.pointDistance[i][j];
 			for(var k = 0; k<index; k++){
 
-				this.theta = this.index[k] * this.anglePerNode - this.anglePerNode/2;
+				//this.theta = this.index[k] * this.anglePerNode - this.anglePerNode/2;
+				this.theta = k * this.anglePerNode - this.anglePerNode/2;
+				/*
 				this.color = [parseInt(this.drawCLR["color1"][0] + Math.random()*80 - 40), 
 						  parseInt(this.drawCLR["color1"][1] + Math.random()*80 - 40), 
 						  parseInt(this.drawCLR["color1"][2] + Math.random()*80 - 40)]
+						  */
 				//this.pointDistance[i][j] = tempDistance - 10 + Math.random() * 20;
 				for(var n = 0; n<this.steps; n++){
 					this.batchedLine(i,j);
@@ -143,7 +150,7 @@ TimeSpiro.prototype.drawNum = function(s,m,h){
 	}
 	
 }
-TimeSpiro.prototype.draw = function(){
+TimeSpiro.prototype.drawContinue = function(){
 
 	var self = this;
 	this.alpha = 255;
@@ -177,7 +184,7 @@ TimeSpiro.prototype.draw = function(){
 		count ++;
 		var i = parseInt(count / self.steps);
 		var j = count % self.steps;
-		
+
 		if(i == self.nodeNum){
 			clearInterval(self.interval);
 			self.redraw();
@@ -185,17 +192,17 @@ TimeSpiro.prototype.draw = function(){
 
 		if(i!= lastI){
 			lastI = i;
+			/*
 			self.color = [parseInt(self.drawCLR["color1"][0] + Math.random()*100 - 50), 
 						  parseInt(self.drawCLR["color1"][1] + Math.random()*100 - 50), 
 						  parseInt(self.drawCLR["color1"][2] + Math.random()*100 - 50)]
+			*/
 		}
 		//self.setAlpha(j, tempAlpha);
-		self.theta = (self.index[i] + j/self.steps) * self.anglePerNode - self.anglePerNode/2; 
+		//self.theta = (self.index[i] + j/self.steps) * self.anglePerNode - self.anglePerNode/2; 
+		self.theta = (i + j/self.steps) * self.anglePerNode - self.anglePerNode/2; 
 		self.processing.pushMatrix();
 		self.processing.rotate(self.angle);
-		
-			
-		console.log(self.color)	  
 		self.batchedLine(0,0);
 		self.processing.popMatrix();
 
