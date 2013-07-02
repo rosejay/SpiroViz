@@ -1,9 +1,9 @@
 
 
 // class TimeSpiro
-var TimeSpiro = function(index, r1, r2, d){
+var TimeSpiro = function(index, r1, r2, d, z){
 
-	SpiroGraph.call(this, index, r1, r2, d);
+	SpiroGraph.call(this, index, r1, r2, d, z);
 
 	// data
 	this.initData(0);
@@ -19,7 +19,8 @@ var TimeSpiro = function(index, r1, r2, d){
 	this.minute = date.minute;
 	this.second = date.second;
 	this.initData(0);
-
+	this.preAlpha = 50;
+	this.first = true;
 }
 TimeSpiro.prototype = Object.create(SpiroGraph.prototype)
 TimeSpiro.prototype.constructor = TimeSpiro;
@@ -27,6 +28,7 @@ TimeSpiro.prototype.setType = function(type){
 	this.type = type;
 }
 TimeSpiro.prototype.setColor = function(color){
+	this.drawCLR["color1"] = color;
 	this.color = color;
 }
 TimeSpiro.prototype.preDraw = function(alpha){
@@ -54,6 +56,7 @@ TimeSpiro.prototype.preDraw = function(alpha){
 TimeSpiro.prototype.drawAll = function(alpha){
 
 	this.preAlpha = alpha;
+	this.alpha = this.preAlpha;
 	for(var i = 0; i<this.gearNum; i++){
 
 		this.initData(i);
@@ -66,10 +69,7 @@ TimeSpiro.prototype.drawAll = function(alpha){
 			var tempDistance = this.pointDistance[i][j];
 			for(var k = 0; k<this.nodeNum; k++){
 
-				var index = k + i*this.nodeNum;
-				this.alpha = this.preAlpha;
 				this.theta = this.index[k] * this.anglePerNode - this.anglePerNode/2;
-
 				this.pointDistance[i][j] = tempDistance - 10 + Math.random() * 20;
 				for(var n = 0; n<this.steps; n++){
 					this.batchedLine(i,j);
@@ -91,9 +91,21 @@ TimeSpiro.prototype.redraw = function(){
 	this.draw();
 }
 
-TimeSpiro.prototype.drawNum = function(index){
+TimeSpiro.prototype.drawNum = function(s,m,h){
 
-	
+	if(s&&m&&h){
+		var index = h;
+		var index2 = m;
+	}
+	else if(s&&m&&!h){
+		var index = m;
+		var index2 = s;
+	}
+	else if(s&&!m&&!h){
+		var index = s;
+		var index2 = 0;
+	}
+
 	this.alpha = 255;
 	for(var i = 0; i<this.gearNum; i++){
 
@@ -107,9 +119,10 @@ TimeSpiro.prototype.drawNum = function(index){
 			var tempDistance = this.pointDistance[i][j];
 			for(var k = 0; k<index; k++){
 
-				this.alpha = this.preAlpha;
 				this.theta = this.index[k] * this.anglePerNode - this.anglePerNode/2;
-				console.log("d",index)
+				this.color = [parseInt(this.drawCLR["color1"][0] + Math.random()*80 - 40), 
+						  parseInt(this.drawCLR["color1"][1] + Math.random()*80 - 40), 
+						  parseInt(this.drawCLR["color1"][2] + Math.random()*80 - 40)]
 				//this.pointDistance[i][j] = tempDistance - 10 + Math.random() * 20;
 				for(var n = 0; n<this.steps; n++){
 					this.batchedLine(i,j);
@@ -117,7 +130,15 @@ TimeSpiro.prototype.drawNum = function(index){
 			}
 
 			this.pointDistance[i][j] = tempDistance;
+			if(index2){
+				this.theta = this.index[k] * this.anglePerNode - this.anglePerNode/2;
+				for(var n = 0; n<index2; n++){
+					this.batchedLine(i,j);
+				}
+			}
 		}
+		
+			
 		this.processing.popMatrix();
 	}
 	
@@ -125,47 +146,56 @@ TimeSpiro.prototype.drawNum = function(index){
 TimeSpiro.prototype.draw = function(){
 
 	var self = this;
-
 	this.alpha = 255;
 	var rate = this.speed * 1000 / this.steps;
 	
-	var currentTime = 0;
-	switch(this.type){
-		case "s":
-			currentTime = this.second - 1;
-			break;
-		case "m":
-			currentTime = this.minute - 1;
-			break;
-		case "h":
-			currentTime = this.hour - 1;
-			break;
-		default:
-			currentTime = this.second - 1;
+	if(this.first){
+		this.first = false;
+		switch(this.type){
+			case "s":
+				this.drawNum(this.second );
+				var count = (this.second ) * this.steps;
+				break;
+			case "m":
+				this.drawNum(this.second, this.minute );
+				var count = parseInt((this.minute + this.second/60) * this.steps );
+				break;
+			case "h":
+				this.drawNum(this.second, this.minute, this.hour );
+				var count = parseInt((this.hour + this.minute/60) * this.steps );
+				break;
+		}
+
 	}
+	else 
+		count = 0;
+		
 
-	this.drawNum(currentTime);
-	var secondCount = (currentTime) * this.steps;
-
+	var lastI = -1;
 	this.interval = setInterval(function(){
 
-		//self.redraw();
-		//self.drawAll(self.preAlpha);
-		secondCount ++;
-		var i = parseInt(secondCount / self.steps);
-		var j = secondCount % self.steps;
+		count ++;
+		var i = parseInt(count / self.steps);
+		var j = count % self.steps;
 		
 		if(i == self.nodeNum){
 			clearInterval(self.interval);
 			self.redraw();
 		}
 
+		if(i!= lastI){
+			lastI = i;
+			self.color = [parseInt(self.drawCLR["color1"][0] + Math.random()*100 - 50), 
+						  parseInt(self.drawCLR["color1"][1] + Math.random()*100 - 50), 
+						  parseInt(self.drawCLR["color1"][2] + Math.random()*100 - 50)]
+		}
 		//self.setAlpha(j, tempAlpha);
 		self.theta = (self.index[i] + j/self.steps) * self.anglePerNode - self.anglePerNode/2; 
 		self.processing.pushMatrix();
 		self.processing.rotate(self.angle);
 		
-
+			
+		console.log(self.color)	  
 		self.batchedLine(0,0);
 		self.processing.popMatrix();
 

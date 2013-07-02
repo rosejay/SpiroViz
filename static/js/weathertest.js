@@ -1,8 +1,8 @@
 
 // class Weather
-var WeatherSpiro = function(index, r1, r2, d){
+var WeatherSpiro = function(index, r1, r2, d, z){
 
-	SpiroGraph.call(this, index, r1, r2, d, r1*2 + 180);
+	SpiroGraph.call(this, index, r1, r2, d, z, r1*2 + 180);
 
 	// parameters
 	this.weatherCLR = {
@@ -169,10 +169,7 @@ WeatherSpiro.prototype.getAngle = function(){
 
 WeatherSpiro.prototype.redraw = function(){
 
-	this.processing.fill(255);
-	this.processing.noStroke();
-	this.processing.ellipse(0, 0, this.outerRadius*2, this.outerRadius*2);
-	this.processing.noFill();
+	this.processing.background(255,0)
 }
 WeatherSpiro.prototype.drawStrokeFromTo = function(start, end){
 

@@ -65,36 +65,33 @@ function drawData(processing){
 	minute.preDraw(20);
 	minute.draw();
 	*/
-	
 
-	var second = new TimeSpiro(0,60,[47],[[20]])
+	var second = new TimeSpiro(0,120,[94],[[20]],1)
 	second.setType("s");
 	second.setSpeed(1);
 	second.setSteps(60);
 	second.setColor([223,97,204]);
 	second.setPosition(700,250);
-	second.drawAll(40);
+	second.drawAll(80);
 	second.draw();
 
-
-	var minute = new TimeSpiro(0,60,[13],[[6]])
+	var minute = new TimeSpiro(0,120,[34],[[6]],1)
 	minute.setType("m");
 	minute.setSpeed(60);
 	minute.setSteps(60);
 	minute.setColor([131,205,230]);
 	minute.setPosition(700,250);
-	minute.drawNum(20);
+	minute.drawAll(80);
 	minute.draw();
 
-	var hour = new TimeSpiro(0,96,[20],[[6]])
+	var hour = new TimeSpiro(0,144,[30],[[8]],1)
 	hour.setType("h");
 	hour.setSpeed(3600);
 	hour.setSteps(60);
 	hour.setColor([145,230,131]);
 	hour.setPosition(700,250);
-	hour.drawAll(100);
+	hour.drawAll(80);
 	hour.draw();
-
 /*
 	var test2 = new SpiroGraph(0,105,[24,80],[[5],[13,14,15]])
 	test2.setSpeed(0.01);
@@ -105,9 +102,6 @@ function drawData(processing){
 	spirotest.setPosition(200,250);
 	spirotest.drawSpecial();
 	//spirotest.initLegend();
-
-
-
 
 	
 	var spirom = new SpiroMove(200, 200, 100, 100, 100);

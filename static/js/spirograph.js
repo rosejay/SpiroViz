@@ -1,10 +1,10 @@
 
 
 // class SpiroGraph
-var SpiroGraph = function(index, r1, r2, d, w){
+var SpiroGraph = function(index, r1, r2, d, z, w){
 
-	this.zoom = 2;
-
+	this.zoom = z ? z : 1;
+	
 	var self = this;
 	this.outerRadius = r1*this.zoom;
 	this.innerRadius = r2;
