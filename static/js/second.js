@@ -1,9 +1,9 @@
 
 
 // class TimeSpiro
-var TimeSpiro = function(index, r1, r2, d, z, w){
+var TimeSpiro = function(index, r1, r2, d, z){
 
-	SpiroGraph.call(this, index, r1, r2, d, z, w);
+	SpiroGraph.call(this, index, r1, r2, d, z);
 
 	// data
 	this.initData(0);
@@ -57,42 +57,12 @@ TimeSpiro.prototype.preDraw = function(alpha){
 	}
 }
 
-TimeSpiro.prototype.drawAll = function(alpha){
-
-	this.preAlpha = alpha;
-	this.alpha = this.preAlpha;
-	for(var i = 0; i<this.gearNum; i++){
-
-		this.initData(i);
-		this.processing.pushMatrix();
-		this.processing.strokeWeight(this.strokeWeight);
-		this.processing.rotate(this.angle);
-
-		for(var j = 0; j<this.distanceNum[i]; j++){
-
-			var tempDistance = this.pointDistance[i][j];
-			for(var k = 0; k<this.nodeNum; k++){
-
-				this.theta = this.index[k] * this.anglePerNode - this.anglePerNode/2;
-				//this.pointDistance[i][j] = tempDistance - 10 + Math.random() * 20;
-				for(var n = 0; n<this.steps; n++){
-					this.batchedLine(i,j);
-				}
-			}
-
-			this.pointDistance[i][j] = tempDistance;
-		}
-		this.processing.popMatrix();
-	}
-
-}
 
 TimeSpiro.prototype.redraw = function(){
-
-	this.processing.background(255,0)
-	this.processing.noStroke();
+	
+	this.ctx.clearRect ( -this.width/2, -this.height/2, this.width, this.height); 
 	this.drawAll(this.preAlpha);
-	this.draw();
+	this.drawContinue();
 }
 
 TimeSpiro.prototype.drawNum = function(s,m,h){
@@ -114,39 +84,34 @@ TimeSpiro.prototype.drawNum = function(s,m,h){
 	for(var i = 0; i<this.gearNum; i++){
 
 		this.initData(i);
-		this.processing.pushMatrix();
-		this.processing.strokeWeight(this.strokeWeight);
-		this.processing.rotate(this.angle);
 
 		for(var j = 0; j<this.distanceNum[i]; j++){
 
 			var tempDistance = this.pointDistance[i][j];
 			for(var k = 0; k<index; k++){
-
-				//this.theta = this.index[k] * this.anglePerNode - this.anglePerNode/2;
-				this.theta = k * this.anglePerNode - this.anglePerNode/2;
-				/*
-				this.color = [parseInt(this.drawCLR["color1"][0] + Math.random()*80 - 40), 
-						  parseInt(this.drawCLR["color1"][1] + Math.random()*80 - 40), 
-						  parseInt(this.drawCLR["color1"][2] + Math.random()*80 - 40)]
-						  */
-				//this.pointDistance[i][j] = tempDistance - 10 + Math.random() * 20;
+				
 				for(var n = 0; n<this.steps; n++){
+					this.theta = k * this.anglePerNode - this.anglePerNode/2 + n*this.angleDiv;
 					this.batchedLine(i,j);
+					if(n!=0)
+						this.stroke();
 				}
 			}
 
 			this.pointDistance[i][j] = tempDistance;
 			if(index2){
-				this.theta = this.index[k] * this.anglePerNode - this.anglePerNode/2;
+				
 				for(var n = 0; n<index2; n++){
+					this.theta = k * this.anglePerNode - this.anglePerNode/2 + n*this.angleDiv;
 					this.batchedLine(i,j);
+
+					if(n!=0)
+						this.stroke();
 				}
 			}
 		}
 		
 			
-		this.processing.popMatrix();
 	}
 	
 }
@@ -155,7 +120,6 @@ TimeSpiro.prototype.drawContinue = function(){
 	var self = this;
 	this.alpha = 255;
 	var rate = this.speed * 1000 / this.steps;
-	
 	if(this.first){
 		this.first = false;
 		switch(this.type){
@@ -201,11 +165,9 @@ TimeSpiro.prototype.drawContinue = function(){
 		//self.setAlpha(j, tempAlpha);
 		//self.theta = (self.index[i] + j/self.steps) * self.anglePerNode - self.anglePerNode/2; 
 		self.theta = (i + j/self.steps) * self.anglePerNode - self.anglePerNode/2; 
-		self.processing.pushMatrix();
-		self.processing.rotate(self.angle);
 		self.batchedLine(0,0);
-		self.processing.popMatrix();
-
+		if(j!=0)
+			self.stroke();
 	}, rate);
 	
 	

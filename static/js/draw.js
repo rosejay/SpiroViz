@@ -65,19 +65,32 @@ function drawData(processing){
 	minute.preDraw(20);
 	minute.draw();
 	*/
+	/*
+	var test = new SpiroGraph(120,[94],[[20]],2);
+	test.draw();
 
-	var second = new TimeSpiro(0,120,[94],[[20]],1)
+	var weather = new WeatherSpiro(96,[52,76],[[1,2,3,4,5,6],[14,15,16,17,18,19]],2);
+	//weather.drawAll();
+	weather.drawAll();
+	
+	weather.setPosition(400,200);
+	weather.drawSpecial();
+	//weather.initLegend();
+*/
+
+/*
+	
+
+	var second = new TimeSpiro(120,[94],[[20]],1)
 	second.setType("s");
 	second.setSpeed(1);
 	second.setSteps(60);
 	second.setColor([223,97,204]);
 	second.setPosition(700,250);
-	second.drawAll(80);
+	second.drawAll(50);
 	second.drawContinue();
 
-	
-
-	var minute = new TimeSpiro(0,120,[34],[[6]],1)
+	var minute = new TimeSpiro(120,[34],[[6]],1)
 	minute.setType("m");
 	minute.setSpeed(60);
 	minute.setSteps(60);
@@ -86,9 +99,7 @@ function drawData(processing){
 	minute.drawAll(80);
 	minute.drawContinue();
 
-	
-
-	var hour = new TimeSpiro(0,144,[30],[[8]],1)
+	var hour = new TimeSpiro(144,[30],[[8]],1)
 	hour.setType("h");
 	hour.setSpeed(3600);
 	hour.setSteps(60);
@@ -97,17 +108,118 @@ function drawData(processing){
 	hour.drawAll(80);
 	hour.drawContinue();
 
+	var test = new ColorSpiro(120,[94],[[20]],1)
+	test.drawAll(50);
+	for(var i = 0; i<10; i++)
+		test.drawStroke(i*2, 20);
+
+	var spiro3 = new ColorSpiro(96,[64],[[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]]);
+	spiro3.drawAll(50);
+	for(var i = 0; i<10; i++){
+
+		var r = parseInt(Math.random()*255);
+		var g = parseInt(Math.random()*255);
+		var b = parseInt(Math.random()*255);
+		spiro3.setColor([r,g,b]);
+		var num = parseInt(Math.random()*3)
+		var distance = parseInt(Math.random()*18)
+		spiro3.drawStroke(num, distance);
+	}
+*/
+	// weather
+	var weather = new WeatherSpiro(96,[52,76],[[1,2,3,4,5,6],[14,15,16,17,18,19]],1);
+	weather.setPosition(950,250);
+	weather.setSteps(100);
+	weather.drawSpecial();
+
+	// time
+	var second = new TimeSpiro(120,[94],[[20]],1)
+	second.setType("s");
+	second.setSpeed(1);
+	second.setSteps(60);
+	second.setColor([223,97,204]);
+	second.setPosition(200,250);
+	second.drawAll(50);
+	second.drawContinue();
+
+	var minute = new TimeSpiro(120,[34],[[6]],1)
+	minute.setType("m");
+	minute.setSpeed(60);
+	minute.setSteps(60);
+	minute.setColor([131,205,230]);
+	minute.setPosition(200,250);
+	minute.drawAll(80);
+	minute.drawContinue();
+
+	var hour = new TimeSpiro(144,[30],[[8]],1)
+	hour.setType("h");
+	hour.setSpeed(3600);
+	hour.setSteps(60);
+	hour.setColor([145,230,131]);
+	hour.setPosition(200,250);
+	hour.drawAll(80);
+	hour.drawContinue();
+
+	// office people
+	var spiro4 = new ColorSpiro(144,[63],[[12,14.5,16.5,17.5,19.5]]);
+	spiro4.setLineWidth(1);
+	spiro4.setPosition(450,250);
+	for(var i = 0; i<spiro4.nodeNum; i++){
+
+		var temp = parseInt(Math.random()*2);
+		if(temp)
+			var color = [0,0,0]
+		else 
+			var color = spiro4.drawCLR["color5"]
+
+		spiro4.setNodeColor(i, color );
+	}
+
+	for(var i = 0; i<spiro4.nodeNum; i++){
+		spiro4.drawStroke(i, 0, 1);
+	}
+	for(var i = 0; i<spiro4.nodeNum; i++){
+		spiro4.drawStroke(i, 1, 0);
+	}
+	for(var i = 0; i<spiro4.nodeNum; i++){
+		spiro4.drawStroke(i, 2, 1);
+	}
+	for(var i = 0; i<spiro4.nodeNum; i++){
+		spiro4.drawStroke(i, 3, 0);
+	}
+	spiro4.drawAllGradient(255);
 
 
-
-
-
-
+	// bus
+	var spiro = new StrokeSpiro(120,[78],[[8]]);
+	spiro.setBus("9");
+	spiro.setSpeed(3);
+	spiro.setAlpha(200);
+	spiro.setPosition(700,250);
+	spiro.drawBG();
+	// bus
+	var spiro2 = new StrokeSpiro(100,[55],[[8]]);
+	spiro2.setBus("91");
+	spiro2.setSpeed(3);
+	spiro2.setAlpha(200);
+	spiro2.setPosition(700,250);
+	spiro2.drawBG();
+	
 /*
+
+	var temp = new EmailSpiro(30,[18],[[4]])
+	temp.setSpeed(0.01);
+	temp.draw();
+
+
+
+
+
 	var test2 = new SpiroGraph(0,105,[24,80],[[5],[13,14,15]])
 	test2.setSpeed(0.01);
 	test2.draw();
 */
+/*
 	var weather = new WeatherSpiro(6,96,[52,76],[[1,2,3,4,5,6],[14,15,16,17,18,19]],2);
 	//weather.drawAll();
 	weather.setPosition(400,200);
@@ -124,5 +236,18 @@ function drawData(processing){
 	var spirom3 = new SpiroMove(200, 200, 100, 100, 100);
 	spirom3.draw(2);
 */
+
+	/*
+
+	var temp = [];
+	for(var i = 0; i<10; i++){
+		for(var j = 0; j<10; j++){
+			temp[i*10 + j] = new SpiroGraph(i*10+j, 105, [i*5], [[j]],1)
+			temp[i*10 + j].setPosition(i*150, j*150);
+			temp[i*10 + j].draw();
+		}
+	}
+	*/
+
 }
 

@@ -49,19 +49,19 @@ var SpiroMove = function(x, y, radius_1, radius_2, point_distance){
 
 SpiroMove.prototype.draw = function(index) {
 
-	var r1 = 0.0;
+	var r1 = 100;
 	var incr = 0.05;
 	var self = this;
 
 	this.interval = setInterval(function(){
 
 		r1 += incr;
-		if(r1 > self.width/2)
-			r1 = 0.0;
+		if(r1 > 140)
+			r1 = 100;
 
 		self.processing.background(255,0);
 		if(index == 0){
-			self.init(self.center_x, self.center_y, r1, 75, 64); 
+			self.init(self.center_x, self.center_y, r1, 78, 53); 
 		}
 		else if(index == 1){
 			self.init(self.center_x, self.center_y, 75, r1, 64); 

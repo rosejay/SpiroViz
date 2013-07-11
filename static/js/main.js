@@ -21,7 +21,6 @@ myDate.prototype.init = function(){
 	this.minute = d.getMinutes();
 	this.second = d.getSeconds();
 	this.str = this.year + "-" + this.month + "-" + this.day + "-" + this.hour + "-" + this.minute + "-" + this.second;
-
 }
 
 
@@ -46,7 +45,7 @@ Weather.prototype.get = function(){
 			self.data = res.data.currently;
 			self.hourly = res.data.hourly.data;
 			self.daily = res.data.daily.data;
-			console.log(self.data)
+			//console.log(self.data)
 			self.convertData();
 			drawProcessing();
 
@@ -110,7 +109,7 @@ weather.get();
 
 
 /*
-var url = "https://spreadsheets.google.com/feeds/cells/0AsJhxk_CJVFIdFU1ZXlKcmhwd2JVRW5McU5BdWRsR1E/od6/public/values?alt=json";
+var url = "https://spreadsheets.google.com/feeds/list/0AsJhxk_CJVFIdFU1ZXlKcmhwd2JVRW5McU5BdWRsR1E/od6/public/values?alt=json";
 $.getJSON(url, function(data) {
 	var items = [];
 		console.log(data)

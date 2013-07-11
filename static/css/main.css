@@ -40,22 +40,28 @@ html{
   	background: #fff;
 }
 body{
-	overflow: hidden;
 	position: relative;
 
 }
 div{
+	
+	
 	position: absolute;
 	top: 0;
 	left: 0;
-	/*
+/*
+
 	transform-origin: 50%, 50%;
 	-moz-transform-origin: 50%, 50%;
 	-webkit-transform-origin: 50%, 50%;*/
-	
+
 }
 canvas{
+	position: absolute;
+	top: 0;
+	left: 0;
 	
-	
-	
+	transform-origin: 50%, 50%;
+	-moz-transform-origin: 50%, 50%;
+	-webkit-transform-origin: 50%, 50%;
 }

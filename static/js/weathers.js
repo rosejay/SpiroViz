@@ -2,7 +2,7 @@
 // class Weather
 var WeatherSpiro = function(index, r1, r2, d, z){
 
-	SpiroGraph.call(this, index, r1, r2, d, z, r1*2 + 180);
+	SpiroGraph.call(this, index, r1, r2, d, z);
 
 	// parameters
 	this.weatherCLR = {
@@ -37,56 +37,9 @@ var WeatherSpiro = function(index, r1, r2, d, z){
 	//this.drawStrokeFromTo(0,1)
 	//this.initTime();
 	//this.drawAll();
-	
 }
 WeatherSpiro.prototype = Object.create(SpiroGraph.prototype)
 WeatherSpiro.prototype.constructor = WeatherSpiro;
-
-
-WeatherSpiro.prototype.initTime = function(){
-
-	this.processing.stroke(0,80);
-
-	for(var i = 0; i<this.hourNum; i++){
-		this.processing.pushMatrix();
-		this.processing.rotate(Math.PI*2/this.hourNum * i);
-		this.processing.line(0, 120, 0, 130);
-		this.processing.popMatrix();
-	}
-}
-WeatherSpiro.prototype.initLegend = function(){
-
-	var num = this.weatherTxt.length;
-	var div = 25;
-	var startX = this.outerRadius + div*1.5;
-	var startY = 0;
-
-	// preset
-	this.processing.noStroke();
-	this.processing.textAlign(this.processing.LEFT, this.processing.CENTER);
-
-	var count = 0;
-	// loop
-	for(var i = 0; i<num; i++){
-
-		if(this.isWeather[i]){
-
-			this.color = this.weatherCLR[this.weatherTxt[i]];
-			// stroke color
-			var x = startX;
-			var y = startY + count*div;
-			this.processing.fill(this.color[0], this.color[1], this.color[2]);
-			this.processing.rect(x, y, 10, 10);
-
-			this.processing.text(this.weatherTxt[i], x + 15, y + 5); 
-			count ++;
-		}
-	}
-
-	// end
-	this.processing.noFill();
-
-}
 WeatherSpiro.prototype.setData = function(){
 
 	var alphaDiv = 255/this.nodeNum;
@@ -163,13 +116,12 @@ WeatherSpiro.prototype.setData = function(){
 	}
 }	
 WeatherSpiro.prototype.getAngle = function(){
-
 	this.angle = ( -1/4 + this.hour / this.hourNum ) *2*Math.PI ;
 }
 
 WeatherSpiro.prototype.redraw = function(){
 
-	this.processing.background(255,0)
+	this.ctx.clearRect ( -this.width/2, -this.height/2, this.width, this.height); 
 }
 WeatherSpiro.prototype.drawStrokeFromTo = function(start, end){
 
@@ -193,12 +145,12 @@ WeatherSpiro.prototype.drawStrokeFromTo = function(start, end){
 		count ++;
 		var j = Math.floor(count / 50);
 		var i = Math.floor(count / 50 / self.distanceNum[0] + start);
-		self.color = self.weatherColor[i];
-		self.processing.pushMatrix();
-		self.processing.rotate(self.angle);
 
+		self.color = self.weatherColor[i];
+		self.beginPath();
+		self.ctx.rotate(self.angle);
 		self.batchedLine(i,j);
-		self.processing.popMatrix();
+		self.ctx.stroke();
 
 		if(count % 50 == 0){
 			self.theta = self.index[i] * self.anglePerNode + self.anglePerNode/2;
@@ -214,6 +166,7 @@ WeatherSpiro.prototype.drawStrokeFromTo = function(start, end){
 
 WeatherSpiro.prototype.drawSpecial = function(){
 
+	console.log(this.weatherColor)
 	var self = this;
 	// draw background
 	//this.drawAll();
@@ -235,10 +188,10 @@ WeatherSpiro.prototype.drawSpecial = function(){
 		count ++;
 		var i = Math.floor(count / self.steps );
 		
-		self.processing.pushMatrix();
-		self.processing.rotate(self.angle);
+		self.ctx.beginPath();
+		self.ctx.rotate(self.angle);
 		if(self.currentGear)
-			self.processing.strokeWeight(self.strokeWeight / 2)
+			self.ctx.lineWidth = self.lineWidth / 2;
 
 		for(var j = 0; j<self.nodeNum; j++){
 
@@ -249,8 +202,9 @@ WeatherSpiro.prototype.drawSpecial = function(){
 			self.color = self.weatherColor[index];
 
 			self.batchedLine();
+			if(self.prev_x)
+				self.stroke();
 		}
-		self.processing.popMatrix();
 
 		if(count % self.steps == 0){
 			self.currentDistance ++;
@@ -277,7 +231,6 @@ WeatherSpiro.prototype.drawSpecial = function(){
 
 WeatherSpiro.prototype.fadeOut = function(){
 
-	
 	this.redraw();
 	this.drawSpecial();
 }
@@ -290,11 +243,8 @@ WeatherSpiro.prototype.drawAllFade = function(){
 
 	// draw current stroke
 
-
-
 	var count = 0;
 	this.interval = setInterval(function(){
-		alert("d")
 		count ++;
 		self.drawAll(count, 10)
 		if(count == 10){
@@ -315,26 +265,22 @@ WeatherSpiro.prototype.drawAll = function(item, total){
 
 		this.initData(i);
 		this.getAngle(i);
-		this.processing.pushMatrix();
-		this.processing.strokeWeight(this.strokeWeight);
-		this.processing.rotate(this.angle);
 
 		for(var j = 0; j<this.distanceNum[i]; j++){
-
 			for(var k = 0; k<this.nodeNum; k++){
 
 				var index = k + i*this.nodeNum;
 				this.alpha = this.weatherAlpha[index] / this.distanceNum[i] * (j+1) * (total - item) / total;
-				this.theta = this.index[k] * this.anglePerNode - this.anglePerNode/2;
 				this.color = this.weatherColor[index];
 
 				for(var n = 0; n<this.steps; n++){
+
+					this.theta = this.index[k] * this.anglePerNode - this.anglePerNode/2 + n*this.angleDiv;
 					this.batchedLine(i,j);
 				}
 			}
 				
 		}
-		this.processing.popMatrix();
 	}
 
 }
