@@ -143,6 +143,8 @@ TimeSpiro.prototype.drawContinue = function(){
 		
 
 	var lastI = -1;
+	//var distance = this.pointDistance[0][0];
+
 	this.interval = setInterval(function(){
 
 		count ++;
@@ -156,6 +158,7 @@ TimeSpiro.prototype.drawContinue = function(){
 
 		if(i!= lastI){
 			lastI = i;
+			//self.pointDistance[0][0] = Math.random() * 10 + distance;
 			/*
 			self.color = [parseInt(self.drawCLR["color1"][0] + Math.random()*100 - 50), 
 						  parseInt(self.drawCLR["color1"][1] + Math.random()*100 - 50), 
@@ -165,6 +168,7 @@ TimeSpiro.prototype.drawContinue = function(){
 		//self.setAlpha(j, tempAlpha);
 		//self.theta = (self.index[i] + j/self.steps) * self.anglePerNode - self.anglePerNode/2; 
 		self.theta = (i + j/self.steps) * self.anglePerNode - self.anglePerNode/2; 
+		
 		self.batchedLine(0,0);
 		if(j!=0)
 			self.stroke();

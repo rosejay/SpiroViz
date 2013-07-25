@@ -47,7 +47,6 @@ EmailSpiro.prototype.draw = function(){
 	this.theta = 0;
 	this.initData(this.currentGear);
 	this.interval = setInterval(function(){
-		console.log("dj")
 		
 		if(self.theta > (self.loopAngle ) * Math.PI){
 			self.currentDistance ++;

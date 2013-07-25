@@ -38,30 +38,140 @@ html{
 	width: 100%;
   	height: 100%;
   	background: #fff;
+  	min-width: 1280px;
 }
 body{
 	position: relative;
-
 }
-div{
-	
-	
-	position: absolute;
-	top: 0;
-	left: 0;
-/*
 
-	transform-origin: 50%, 50%;
-	-moz-transform-origin: 50%, 50%;
-	-webkit-transform-origin: 50%, 50%;*/
-
-}
 canvas{
 	position: absolute;
 	top: 0;
 	left: 0;
-	
+
+
 	transform-origin: 50%, 50%;
 	-moz-transform-origin: 50%, 50%;
 	-webkit-transform-origin: 50%, 50%;
+	-webkit-transition: -webkit-transform 1.0s linear;
 }
+canvas.fast{
+	-webkit-transition: -webkit-transform 0.0s linear;
+
+}
+
+p.date{
+	position: absolute;
+	width: 200px;
+	text-align: center;
+	font-size: 12px;
+	color: #aaa;
+}
+
+#textBox{
+	position: absolute;
+	top: 250px;
+	right: 0;
+	width: 300px;
+	height: 500px;
+	color: #aaa;
+}
+#textBox h2{
+	color: #000;
+	font-size: 20px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+#textBox #textTime{
+	font-size: 15px;
+	color: #ccc;
+	width: 100%;
+	line-height: 20px;
+	margin-bottom: 10px;
+}
+#textBox p{
+	width: 100%;
+	line-height: 20px;
+	margin-bottom: 10px;
+}
+
+
+.navigation{
+	position: absolute;
+	left: 20px;
+	top: 50px;
+	color: #aaa;
+	width: 200px;
+	z-index: 100;
+}
+.navigation h2{
+	width: 100%;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 30px;
+	color: #000;
+}
+.navigation p{
+	width: 100%;
+	font-size: 16px;
+	line-height: 20px;
+	color: #666;
+}
+.navigation .section{
+	width: 100%;
+	margin: 20px 0;
+}
+.navigation .section h3{
+	width: 100%;
+	line-height: 20px;
+	font-weight: bold;
+}
+.navigation .section ul{
+	width: 100%;
+}
+.navigation .section ul li{
+	float: left;
+	margin: 5px 0;
+	width: 100%;
+	line-height: 20px;
+	cursor: pointer;
+}
+.navigation .section ul li.sel{
+	color: #666;
+	font-weight: bold;
+	padding-left: 4px;
+	border-left: 3px solid #666;
+}
+.navigation .section ul li:hover{
+	color: #666;
+	padding-left: 7px;
+}
+
+
+
+
+
+.demoCanvas{
+	position: absolute;
+	top: 0;
+	left: 200px;
+	width: 1000px;
+}
+
+.demoCanvas h3{
+	width: 100%;
+	text-align: center;
+	font-size: 40px;
+	font-weight: bold;
+	top: 100px;
+	color: #000;
+	position: absolute;
+}
+
+
+
+
+
+
+
+

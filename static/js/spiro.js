@@ -7,12 +7,13 @@ var SpiroGraph = function(r1, r2, d, z){
 
 	// init r1 r2
 	this.zoom = z ? z : 1;
-	this.outerRadius = r1*this.zoom;
+	this.outerRadius = parseInt(r1*this.zoom);
 	this.innerRadius = r2;
 	this.gearNum = r2.length;
 
 	for(var i = 0; i<this.innerRadius.length; i++){
 		this.innerRadius[i] *= this.zoom;
+		this.innerRadius[i] = parseInt(this.innerRadius[i]);
 	}
 
 	// set d
@@ -22,7 +23,8 @@ var SpiroGraph = function(r1, r2, d, z){
 	for(var i = 0; i<this.gearNum; i++){
 		this.pointDistance[i] = [];
 		for(var j = 0; j<d[i].length; j++)
-			this.pointDistance[i][j] = this.innerRadius[i] - d[i][j]*3*this.zoom;
+			//this.pointDistance[i][j] = this.innerRadius[i] - d[i][j]*3*this.zoom;
+			this.pointDistance[i][j] = parseInt(d[i][j]*this.zoom);
 		this.distanceNum[i] = j;
 		this.totalSpiroNum += j;
 	}
@@ -31,9 +33,9 @@ var SpiroGraph = function(r1, r2, d, z){
 	this.$canvas = $("<canvas></canvas>");
 	//this.$box = $("<div></div>");
 	//this.$box.append(this.$canvas);
-	$("body").append(this.$canvas);
+	$(".demoCanvas").append(this.$canvas);
 
-	this.width = this.height = this.outerRadius*3;
+	this.width = this.height = this.outerRadius*5;
 	this.center = this.width/2;
 
 	// drawing style
@@ -50,6 +52,7 @@ var SpiroGraph = function(r1, r2, d, z){
 	this.ctx.translate(this.center, this.center);
 
 
+	
 	this.theta = 0;
 	this.speed = 0.1;  // seconds to draw one node
 	this.steps = 60;
@@ -73,8 +76,14 @@ var SpiroGraph = function(r1, r2, d, z){
 	this.positionY = 0;
 	this.interval;
 
-
+	this.shift = 0;
 }
+
+SpiroGraph.prototype.stopDrawing = function(){
+	console.log("d");
+	clearInterval(self.interval);
+}
+
 SpiroGraph.prototype.initData = function(index){
 
 	this.gcdNum = this.gcd(this.outerRadius,this.innerRadius[index]);
@@ -110,8 +119,11 @@ SpiroGraph.prototype.setSteps = function(item){
 	this.steps = item; 
 }
 SpiroGraph.prototype.setAlpha = function(item){
-	
 	this.alpha = item;
+	this.preAlpha = item;
+}
+SpiroGraph.prototype.setShift = function(item){
+	this.shift = item; 
 }
 SpiroGraph.prototype.setColor = function(item){
 	this.color = item;
@@ -155,30 +167,46 @@ SpiroGraph.prototype.drawAll = function(alpha){
 
 
 	this.alpha = this.preAlpha = alpha ? alpha : 50;
-
 	for(var i = 0; i<this.gearNum; i++){
 
 		this.initData(i);
+
+		
+
+
+
 		for(var j = 0; j<this.distanceNum[i]; j++){
 
 			var tempDistance = this.pointDistance[i][j];
+			//this.lineWidth += 0.2;
+			//this.alpha +=20;
+			//this.color = [131,205,230]
+
 			for(var k = 0; k<this.nodeNum; k++){
 				
 				//this.pointDistance[i][j] = tempDistance - 10 + Math.random() * 20;
+
+
+
 				for(var n = 0; n<this.steps; n++){
 					this.theta = k * this.anglePerNode - this.anglePerNode/2 + n*this.angleDiv;
+					this.angle = this.shift * j * this.perGear;
 					this.batchedLine(i,j);
-					if(n!= 0)
+					if(n!= 0 && this.prev_x)
 						this.stroke();
 				}
 			}
-
+			this.prev_x = 0;
+			this.prev_y = 0;
 			this.pointDistance[i][j] = tempDistance;
 		}
 	}
 
 	this.currentGear = this.currentDistance = 0;
 }
+
+
+
 
 SpiroGraph.prototype.draw = function(){
 	this.alpha = 55;
@@ -238,42 +266,7 @@ SpiroGraph.prototype.stroke = function(){
 
 
 
-SpiroGraph.prototype.drawOneStrokeWithColor = function(num) {
 
-	// FILL
-	this.ctx.beginPath();
-	this.angle = 2*Math.PI / this.nodeNum * num;
-	//this.ctx.rotate(this.angle);
-	this.ctx.lineWidth = this.lineWidth*3;
-	this.ctx.strokeStyle = "rgb("+this.color[0]+","+this.color[1]+","+this.color[2]+")";
-	this.ctx.globalAlpha = this.alpha/255/3;
-	// fill gradient
-	var lingrad = this.ctx.createLinearGradient(0,0,Math.cos(this.angle)*100,Math.sin(this.angle)*100);
-    lingrad.addColorStop(0, '#fff');
-    lingrad.addColorStop(1, "rgb("+this.color[0]+","+this.color[1]+","+this.color[2]+")");
-
-	this.ctx.moveTo(this.xPoint[0], this.yPoint[0]);
-	for(var i = 0; i<this.xPoint.length; i++){
-		this.ctx.lineTo(this.xPoint[i], this.yPoint[i]);
-	}
-
-	this.ctx.fillStyle = lingrad;
-	this.ctx.fill();
-
-	// STROKE
-	this.ctx.beginPath();
-	this.ctx.strokeStyle = "rgb("+this.color[0]+","+this.color[1]+","+this.color[2]+")";
-	this.ctx.globalAlpha = this.alpha/255/2;
-	
-	for(var i = 0; i<this.xPoint.length-1; i++){
-		this.ctx.beginPath();
-		this.ctx.lineTo(this.xPoint[i], this.yPoint[i]);
-		this.ctx.lineTo(this.xPoint[i+1], this.yPoint[i+1]);
-		this.ctx.lineWidth = Math.sin(i/this.xPoint.length*Math.PI);
-		this.ctx.stroke();
-	}
-
-}
 SpiroGraph.prototype.pushPoint = function(n) {
 
 	if(n == 0){
@@ -303,6 +296,7 @@ SpiroGraph.prototype.batchedLine = function(i,j) {
 	}
 
 }
+
 
 
 

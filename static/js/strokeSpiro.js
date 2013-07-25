@@ -11,16 +11,18 @@ var StrokeSpiro = function(index, r1, r2, d, z){
 	// data
 	this.initData(0);
 
-
 	this.drawCLR = {
 		color1: [0,144,255],
 		color2: [255,0,66],
 		color3: [255,96,135]
 	}
 
+	this.smallLineWidth = 3;
+	this.bigLineWidth = 5;
 	this.onColor = [0,0,0];
 	this.offColor = [150,150,150];
 
+	this.alphaMax = 150;
 	this.alphaList = []
 	for(var i = 0; i<20; i++){
 		this.alphaList[i] = this.getAlpha(i);
@@ -31,11 +33,10 @@ StrokeSpiro.prototype.constructor = StrokeSpiro;
 StrokeSpiro.prototype.getAlpha = function(item){
 
 	if(item < 5)
-		return Math.sin((item+10)/30 * Math.PI) * 150 - 80;
+		return Math.sin((item+10)/30 * Math.PI) * this.alphaMax - 80;
 
-	return Math.sin((item+10)/30 * Math.PI) * 150;
+	return Math.sin((item+10)/30 * Math.PI) * this.alphaMax;
 
-	//return (1 - Math.abs(Math.sin((item+25)/30 * Math.PI))) * 150;
 }
 StrokeSpiro.prototype.setBus = function(item){
 	this.bus = item;
@@ -126,20 +127,20 @@ StrokeSpiro.prototype.drawAllGradient = function(){
 			var arr2 = busData[k].number.split(".")
 			if (arr1[0] == arr2[0]){
 				this.color = this.onColor;
-				this.alpha = 150;
-				this.lineWidth = 6;
+				this.alpha = this.alphaMax;
+				this.lineWidth = this.bigLineWidth;
 			}
 			else {
 				this.color = this.offColor;
 				this.alpha = this.alphaList[k];
-				this.lineWidth = 4;
+				this.lineWidth = this.smallLineWidth;
 			}
 				
 		}
 		else{
 			this.color = this.offColor;
 			this.alpha = this.alphaList[k];
-			this.lineWidth = 4;
+			this.lineWidth = this.smallLineWidth;
 		}
 			
 		this.drawOneStroke(k);

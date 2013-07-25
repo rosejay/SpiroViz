@@ -49,6 +49,9 @@ Weather.prototype.get = function(){
 			self.convertData();
 			drawProcessing();
 
+			
+
+
 		}
 		
 	});
@@ -104,7 +107,7 @@ date.init();
 
 var weather = new Weather();
 weather.get();
-
+console.log("ddhkj")
 
 
 
