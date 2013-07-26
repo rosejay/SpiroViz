@@ -98,7 +98,7 @@ p.date{
 
 
 #hide{
-	position: absolute;
+	position: fixed;
 	left: 20px;
 	top: 10px;
 	font-size: 12px;
