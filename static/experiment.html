@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>SpiroViz</title>
+		<meta name="description" content="">
+		<meta name="generator" content="">
+		<meta name="author" content="">
+
+		<!-- CSS -->
+		<link rel="stylesheet" type="text/css" href="css/experiment.css">
+
+		<!-- LESS -->
+		<link rel="stylesheet/less" type="text/css" href="css/style.less" />
+		<script type="text/javascript" src="js/lib/less.js"></script>
+
+		<!-- Javascript Lib -->
+		<script type="text/javascript" src="js/lib/jquery-1.9.1.js"></script>
+
+		<!-- Tangle -->
+    	<script type="text/javascript" src="js/lib/Tangle.js"></script>
+		
+	    <!-- TangleKit (optional) -->
+	    <link rel="stylesheet" href="js/lib/TangleKit/TangleKit.css" type="text/css">
+	    <script type="text/javascript" src="js/lib/TangleKit/mootools.js"></script>
+	    <script type="text/javascript" src="js/lib/TangleKit/sprintf.js"></script>
+	    <script type="text/javascript" src="js/lib/TangleKit/BVTouchable.js"></script>
+	    <script type="text/javascript" src="js/lib/TangleKit/TangleKit.js"></script>
+
+	    <!-- FlatUI -->
+		<script type="text/javascript" src="js/lib/flatui-checkbox.js"></script>
+
+    	
+	</head>
+	<body>
+		
+
+		<header class="fl">
+			<h3>SpiroGraph Visualization Experiment</h3>
+			<p>To explore the relationship between Spirograph and Data Visualization</p>
+		</header>
+		<div class="main fl">
+			<div class="main-left graph fl">
+				
+			</div>
+
+			<div class="main-right fl">
+				<ul class="spiro-list list">
+					<li class="title">
+						<p class="col1 col">Static</p>
+						<p class="col2 col">Mobile</p>
+						<p class="col3 col">Distance</p>
+						<p class="col4 col">Color</p>
+						<p class="col5 col">Alpha</p>
+						<p class="col6 col">Width</p>
+						<p class="col7 col">Speed1*</p>
+						<p class="col8 col">Speed2*</p>
+						<p class="col9 col">Animation</p>
+						<p class="col10 col">Enabled</p>
+					</li>
+
+				</ul>
+
+
+				<ul class="spiro-list">
+					<li class="title">
+						<p class="title">ADD NEW SPIROGRAPH</p>
+					</li>
+					<li>
+						<p class="col1 col new">
+							<input type="text" value="" tabindex="1">
+						</p>
+						<p class="col2 col new">
+							<input type="text" value="" tabindex="2">
+						</p>
+						<p class="col3 col new">
+							<input type="text" value="" tabindex="3">
+						</p>
+						<!--
+						<p class="col4 col new">
+							<input type="color" value="#000" name="favcolor" tabindex="4">
+						</p>
+						<p class="col5 col new">
+							<input type="text" value="" tabindex="5">
+						</p>
+						<p class="col6 col new">
+							<input type="text" value="" tabindex="6">
+						</p>
+						<p class="col7 col new">
+							<input type="text" value="" tabindex="7">
+						</p>
+						<p class="col8 col new">
+							<input type="text" value="" tabindex="8">
+						</p>
+						<p class="col9 col new">
+							<input type="text" value="" tabindex="9">
+						</p>
+					-->
+						<p class="col10 col new">
+							<a class="btn btn-block btn-info add-spiro" tabindex="10">ADD</a>
+						</p>
+					</li>
+
+				</ul>
+				<p class="tips">* Speed1: Seconds to draw one petal</p>
+				<p class="tips">* Speed2: Seconds to draw the whole pattern, inadjustable currently</p>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<footer class="fl">
+
+		</footer>
+		
+		
+
+
+
+
+		<script type="text/javascript" src="js/spiroExperiment.js"></script>
+		<script type="text/javascript" src="js/myGraph.js"></script>
+		<script type="text/javascript" src="js/experiment.js"></script>
+
+		<script type="text/javascript" src="js/url.js"></script>
+
+
+
+		<!-- calender api
+		<script src="http://www.google.com/calendar/feeds/developer-calendar@google.com/public/full?alt=json-in-script&callback=listEvents">
+		</script>
+	-->
+
+	</body>
+</html>

@@ -202,7 +202,7 @@ ShiftSpiro.prototype.draw = function() {
 	var lastI = -1;
 	var i = 0;
 	self.$canvas.css("transform", "rotate(20deg)")
-
+	console.log(self.rate)
 	this.interval = setInterval(function(){
 
 		if(i!=lastI){
@@ -233,18 +233,18 @@ ShiftSpiro.prototype.draw = function() {
 
 
 
-ShiftSpiro.prototype.draw2 = function() {
+ShiftSpiro.prototype.drawTypeTwo = function() {
 
 	var self = this;
 	var count = 0;
 	var lineWidth = this.lineWidth;
 	var alpha = this.alpha;
-
 	var totalNum = 12*60;
 	this.interval = setInterval(function(){
 
 		self.$canvas.css("transform", "rotate("+(-360/totalNum*count)+"deg)")
 
+		console.log((-360/totalNum*count))
 		var length = self.data[count].length
 		if(length){
 			self.lineWidth = lineWidth * length;
@@ -330,7 +330,6 @@ ShiftSpiro.prototype.draw4 = function() {
 			var index = parseInt((self.data[count][0].time + i*1440 )/totalNum * self.nodeNum)
 			self.drawGradientStroke(index, 0);
 
-
 			var tempIndex = self.currentIndex - index;
 			$("#textBox p").remove();
 			$("#textBox #textTime").html(self.data[count][0].str);
@@ -339,8 +338,15 @@ ShiftSpiro.prototype.draw4 = function() {
 				$("#textBox").append($p);
 			}
 		}
+		else{
+			$("#textBox p").remove();
+			var str = generateTimeStr(CHIDays[i][0], CHIDays[i][1], parseInt(count%1440/60), parseInt(count%1440%60) )
+			$("#textBox #textTime").html(str);
 
+		}
 		count ++;
+
+			
 
 		if(count >= totalNum){
 			clearInterval(self.interval);

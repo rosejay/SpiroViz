@@ -59,6 +59,9 @@ TwitterSpiro.prototype.setStrokeFill = function(item){
 TwitterSpiro.prototype.setGradientPoint = function(item){
 	this.gradientPoint = item;
 }
+TwitterSpiro.prototype.setDay = function(item){
+	this.day = item;
+}
 TwitterSpiro.prototype.setData = function(item){
 
 	this.data = [];
@@ -71,6 +74,7 @@ TwitterSpiro.prototype.setData = function(item){
 	for(var i = 0; i<60*12; i++){
 		this.data[i] = item[i+index];
 	}
+
 }
 TwitterSpiro.prototype.setTenDayData = function(item){
 
@@ -100,8 +104,7 @@ TwitterSpiro.prototype.setRate = function(item){
 
 TwitterSpiro.prototype.drawAll = function(alpha){
 
-	this.alpha = this.preAlpha = this.alpha  ? this.alpha  : 50;
-	this.alpha = 25;
+	this.alpha = this.preAlpha = alpha  ? alpha  : 50;
 
 	for(var i = 0; i<this.gearNum; i++){
 		this.initData(i);
@@ -168,7 +171,7 @@ TwitterSpiro.prototype.drawMultipleStroke = function(num, times){
 			this.batchedLineDistance(distance);
 			this.pushPoint(n);
 		}
-		this.drawOneStroke(this.isStrokeFill);
+		this.drawOneStroke();
 	}
 		
 }
@@ -189,7 +192,7 @@ TwitterSpiro.prototype.drawDaysView = function(num, minute){
 		this.pushPoint(n);
 
 	}
-	this.drawOneStroke(this.isStrokeFill);
+	this.drawOneStroke();
 }
 
 TwitterSpiro.prototype.drawGradientStroke = function(num, minute){
@@ -209,7 +212,7 @@ TwitterSpiro.prototype.drawGradientStroke = function(num, minute){
 		this.pushPoint(n);
 
 	}
-	this.drawOneStroke(this.isStrokeFill);
+	this.drawOneStroke();
 }
 
 TwitterSpiro.prototype.drawGradientStrokeDay = function(num, minute){
@@ -228,7 +231,7 @@ TwitterSpiro.prototype.drawGradientStrokeDay = function(num, minute){
 		this.pushPoint(n);
 
 	}
-	this.drawOneStroke(this.isStrokeFill);
+	this.drawOneStroke();
 }
 
 
@@ -256,9 +259,29 @@ TwitterSpiro.prototype.draw = function() {
 
 	var lastI = -1;
 	var i = 0;
-	self.$canvas.css("transform", "rotate(20deg)")
-	this.interval = setInterval(function(){
+	self.$canvas.css("transform", "rotate(30deg)")
 
+	if( typeof(self.day) != "undefined" ){
+
+		$("#textBox").css("width", "400px")
+
+		var top = self.myindex * 500 + 100;
+		$("#textBox").css("top", top) ;
+
+		if(top +500 > winheight)
+			$("body").animate({scrollTop:top - 100}, '200', 'swing', function() { });
+	}
+	else{
+
+		$("#textBox").css("width", "200px")
+		var top = parseInt(self.myindex/4 + 1) * 200;
+		$("#textBox").css("top", top) ;
+
+		if(top +200 > winheight)
+			$("body").animate({scrollTop:top - 100}, '200', 'swing', function() { });
+	}
+
+	this.interval = setInterval(function(){
 
 		if(i!=lastI){
 			self.$canvas.css("transform", "rotate("+(-360/12*(i))+"deg)")
@@ -270,22 +293,26 @@ TwitterSpiro.prototype.draw = function() {
 		if(length){
 			self.lineWidth = lineWidth *length;
 			self.alpha = alpha * length;
-
 			self.drawGradientStroke(self.data[count][0].hour%12, self.data[count][0].minute)
-			
+			self.updateTweets(count);
+		}
+		else{
+
+			if( typeof(self.day) != "undefined" ){
+				self.updateText(self.day, count);
+			}
+			else{
+				self.updateText(parseInt(self.myindex/2), count);
+			}
 		}
 
-
-		i = parseInt(count/60)
-		if(self.isPM)
-			$("body p:eq("+self.myindex+") span").html(i+12)
-		else
-			$("body p:eq("+self.myindex+") span").html(i)
-
+		i = parseInt(count/60);
+		self.updateHour(i)
+		
 		count ++;
 		if(count >= 12*60){
 			clearInterval(self.interval);
-			$("body p:eq("+self.myindex+") span").html("");
+			$(".demoCanvas p.date:eq("+self.myindex+") span").html("");
 			self.$canvas.css("transform", "rotate(-360deg)")
 		}
 			
@@ -293,7 +320,87 @@ TwitterSpiro.prototype.draw = function() {
 	}, self.rate);
 }
 
+TwitterSpiro.prototype.updateText = function(day, count) {
 
+
+
+	$("#textBox p").remove();
+	if(this.isPM)
+		var str = generateTimeStr(CHIDays[day][0], CHIDays[day][1], parseInt(count/60)+12, parseInt(count%60) )
+	else
+		var str = generateTimeStr(CHIDays[day][0], CHIDays[day][1], parseInt(count/60), parseInt(count%60) )
+
+	$("#textBox #textTime").html(str);
+
+	for(var j = 0; j<this.data[count].length; j++){
+		var $p = $("<p>"+this.data[count][j].text+"</p>")
+		$("#textBox").append($p);
+	}
+}
+TwitterSpiro.prototype.updateTweets = function(count) {
+
+	$("#textBox p").remove();
+	$("#textBox #textTime").html(this.data[count][0].str);
+	for(var j = 0; j<this.data[count].length; j++){
+		var $p = $("<p>"+this.data[count][j].text+"</p>")
+		$("#textBox").append($p);
+	}
+}		
+TwitterSpiro.prototype.updateHour = function(i) {
+
+	if(this.isPM)
+		$(".demoCanvas p.date:eq("+this.myindex+") span").html(i+12)
+	else
+		$(".demoCanvas p.date:eq("+this.myindex+") span").html(i)
+}
+
+TwitterSpiro.prototype.drawTypeTwo = function() {
+
+	var self = this;
+	var count = 0;
+	var lineWidth = this.lineWidth;
+	var alpha = this.alpha;
+	var totalNum = 12*60;
+
+	$("#textBox").css("width", "400px")
+	var top = self.myindex * 500 + 150;
+	$("#textBox").css("top", top) ;
+
+	if(top +500 > winheight)
+		$("body").animate({scrollTop:top - 100}, '200', 'swing', function() { });
+
+	this.interval = setInterval(function(){
+
+		self.$canvas.css("transform", "rotate("+(-360/totalNum*count)+"deg)")
+
+		var length = self.data[count].length
+		if(length){
+			self.lineWidth = lineWidth * length;
+			self.alpha = 3 * length + alpha;
+			if(self.isPM)
+				var index = parseInt((self.data[count][0].time - totalNum)/totalNum * self.nodeNum)
+			else
+				var index = parseInt(self.data[count][0].time/totalNum * self.nodeNum)
+			self.drawGradientStroke(index, 0);
+			self.updateTweets(count);
+		}
+		else{
+			self.updateText(self.day, count);
+
+		}
+
+		i = parseInt(count/60);
+		self.updateHour(i)
+		
+		
+		count ++;
+		if(count >= totalNum){
+			clearInterval(self.interval);
+			self.$canvas.css("transform", "rotate(-360deg)")
+		}
+
+	}, self.rate);
+}	
 
 TwitterSpiro.prototype.draw2 = function() {
 
@@ -371,10 +478,10 @@ TwitterSpiro.prototype.draw3 = function() {
 
 
 
-TwitterSpiro.prototype.drawOneStroke = function(isFill) {
+TwitterSpiro.prototype.drawOneStroke = function() {
 			
 	// FILL	
-	if(isFill){
+	if(this.isStrokeFill){
 
 		this.ctx.save();
 		this.ctx.beginPath();
@@ -387,14 +494,14 @@ TwitterSpiro.prototype.drawOneStroke = function(isFill) {
 		var midD = parseInt( Math.sqrt( Math.pow(this.xPoint[midIndex],2) + Math.pow(this.yPoint[midIndex],2) ));
 
 		if(this.type == 1){
-			this.ctx.globalAlpha = this.preAlpha/255/2;
+			this.ctx.globalAlpha = this.preAlpha/255;
 			var lingrad = this.ctx.createLinearGradient(
 								Math.cos(this.gradientAngle)*this.innerRadius[0],
 								Math.sin(this.gradientAngle)*this.innerRadius[0],
 								Math.cos(this.gradientAngle)*midD,
 								Math.sin(this.gradientAngle)*midD);
 			lingrad.addColorStop(0, "rgba("+this.bgColor[0]+","+this.bgColor[1]+","+this.bgColor[2]+",0)");
-		    lingrad.addColorStop(1, "rgba("+this.color[0]+","+this.color[1]+","+this.color[2]+","+(this.preAlpha/255/2)+")");
+		    lingrad.addColorStop(1, "rgba("+this.color[0]+","+this.color[1]+","+this.color[2]+","+(this.preAlpha/255)+")");
 		}
 			
 
@@ -436,10 +543,7 @@ TwitterSpiro.prototype.drawOneStroke = function(isFill) {
 		// if it has stroke style
 		if(this.isStroke){
 			var temp =  (1-Math.abs(Math.sin((i/this.xPoint.length-1/2)*Math.PI)))
-			this.ctx.lineWidth = temp*this.lineWidth;
-
-			if(i>=0 && i<5)
-				this.ctx.lineWidth = 0;
+			this.ctx.lineWidth = temp*this.lineWidth
 
 			if(this.type == 1)
 				this.ctx.globalAlpha = this.alpha/255/2 * temp

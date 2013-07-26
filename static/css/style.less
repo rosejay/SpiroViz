@@ -1,0 +1,138 @@
+
+@border: 1px solid #444;
+@lighttext: #999;
+@background: #282828;
+@colwidth: 64px;
+
+
+html{
+	background: @background;
+	color: #fff;
+	font:14px/1.5 "Helvetica-Neue", "Arial", sans-serif;
+}
+body{
+	
+	width: 1200px;
+	margin: 40px auto;
+	header{
+		width: 100%;
+		height: 80px;
+		h3{
+			font-size: 28px;
+			font-weight: bold;
+		}
+		p{
+			font-weight: normal;
+		}
+	}
+	div.main{
+		width: 100%;
+		height: 500px;
+		div.graph{
+			position: relative;
+			canvas{
+				position: absolute;
+				top: 0;
+				left: 0;
+				transform-origin: 50%, 50%;
+				-moz-transform-origin: 50%, 50%;
+				-webkit-transform-origin: 50%, 50%;
+			}
+		}
+		div.main-left {
+			width: 500px;
+			height: 100%;
+			background: #fff;
+			-webkit-box-shadow: 0 0 5px #111;
+			-moz-box-shadow: 0 0 5px #111;
+			box-shadow: 0 0 5px #111;
+			canvas{
+				width: 100%;
+				height: 100%;
+				
+			}
+		}
+		div.main-right{
+			width: 660px;
+			margin-left: 20px;
+			height: 100%;
+			.tips{
+				font-size: 10px;
+				color: #666;
+			}
+			a.add-spiro{
+				font-size: 12px;
+				cursor: pointer;
+			}
+			ul.spiro-list{
+				width: 100%;
+				margin-bottom: 10px;
+				border-top: @border;
+				border-left: @border;
+				border-right: @border;
+				li{
+					width: 100%;
+					height: 30px;
+					border-bottom: @border;
+					padding: 5px 0;
+					p.title{
+						margin-left: 15px;
+						text-align: left;
+					}
+					p{
+						float: left;
+					}
+					input.col{
+						float: left;
+						background: rgba(0,0,0,0);
+						padding: 5px 10px 5px 10px;
+						width: (@colwidth - 20);
+						color: #fff;
+						text-align: center;
+						border-right: @border;
+						line-height: 30px;
+					}
+					span.TKAdjustableNumber.col{
+						color: #fff;
+					}
+					span.col, p.col{
+						color: #999;
+						float: left;
+						width: @colwidth;
+						line-height: 30px;
+						text-align: center;
+						border-right: @border;
+						input{
+							background: rgba(0,0,0,0);
+							padding: 5px 10px 5px 10px;
+							width: (@colwidth - 20);
+							color: #fff;
+							text-align: center;
+						}
+					}
+					p:last-child{
+						border-right: 0;
+					}
+					span.col4, p.col4{
+						span{
+							margin: 5px 10px 5px 10px;
+							display: block;
+							height: 20px;
+						}
+					}
+				}
+				li.title{
+					color: @lighttext;
+					height: 20px;
+					line-height: 20px;
+					p{
+						line-height: 20px;
+					}
+
+				}
+			}
+			
+		}
+
+	}
+}

@@ -80,8 +80,7 @@ var SpiroGraph = function(r1, r2, d, z){
 }
 
 SpiroGraph.prototype.stopDrawing = function(){
-	console.log("d");
-	clearInterval(self.interval);
+	window.clearInterval(this.interval);
 }
 
 SpiroGraph.prototype.initData = function(index){
@@ -102,6 +101,10 @@ SpiroGraph.prototype.initData = function(index){
 			this.index[0] = 0;
 	}
 }
+
+
+
+
 SpiroGraph.prototype.setStartAngle = function(item){
 
 	this.startGear = item;

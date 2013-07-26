@@ -15,7 +15,10 @@ for(var i = 0; i<CHIDaysNum; i++){
 		CHITimeData[i][j] = [];
 }
 
+$("#hide").click(function(){
+	$(".navigation").fadeToggle(200);
 
+})
 
 var MyCHIData = function( id, name, text, month, day, hour, minute, second){
 
@@ -27,30 +30,13 @@ var MyCHIData = function( id, name, text, month, day, hour, minute, second){
 	this.hour = hour;
 	this.minute = minute;
 	this.time = this.hour * 60 + this.minute;  
-	this.str = "";
-
-
-
-	if(this.month == 3)
-		this.str += "April"
-	else if(this.month == 4)
-		this.str += "May"
-
-	var h = this.hour;
-	if(h<10)
-		h = "0" + h.toString();
-
-	var m = this.minute;
-	if(m<10)
-		m = "0" + m.toString();
-
-	this.str += " " + this.day + " " + h + ":" + m; 
-
-
-
-
+	this.str = generateTimeStr(this.month, this.day, this.hour, this.minute);
+	
 }
-var MyDrawData = function( x,y,color, radius, index, data){
+
+
+
+var MyDrawData = function( x,y,color, radius, index, data, day, time){
 
 	this.x = x;
 	this.y = y;
@@ -58,11 +44,41 @@ var MyDrawData = function( x,y,color, radius, index, data){
 	this.radius = radius;
 	this.index = index;
 	this.data = data;
+
+	this.day = day;
+	this.time = time;
+
+	if(day || day == 0){
+		this.str = generateTimeStr(CHIDays[day][0], CHIDays[day][1], parseInt(time/60), time%60);
+	}
+
 }
 MyDrawData.prototype.setXY = function(x, y){
 	this.x = x;
 	this.y = y;
 }
+
+function generateTimeStr(month, day, hour, minute){
+
+	var str = "";
+
+	if(month == 3)
+		str += "April"
+	else if(month == 4)
+		str += "May"
+
+	var h = hour;
+	if(h<10)
+		h = "0" + h.toString();
+
+	var m = minute;
+	if(m<10)
+		m = "0" + m.toString();
+
+	str += " " + day + " " + h + ":" + m; 
+	return str;
+}
+
 
 
 // get CHI data
@@ -540,82 +556,6 @@ $.getJSON('js/chi2013.json', function(data) {
 
 */
 
-function drawDaysView(){
-
-/*
-	var temp = new TwitterSpiro(180,[105],[[95,18]],1)
-	temp.$canvas.css("zoom", 1);
-	temp.setLineWidth(0.2);
-	temp.setStroke(1)
-	temp.drawAll();
-	temp.setGradientPoint(0.6);
-	temp.setAlpha(10);
-
-	var i = 0;
-	var count = 0;
-
-	var inter = setInterval(function(){
-
-
-		if(CHIData[i][count]){
-			var arr = CHIData[i][count].split(":");
-			arr[0] = parseInt(arr[0])
-			arr[1] = parseInt(arr[1])
-			var minute = arr[0] * 60 + arr[1];
-			temp.drawDaysView(i,minute);
-		}
-
-		count++;
-		// end
-		if(count == CHIData[i].length){
-			count = 0;
-			i++;
-			if(i == 10)
-				clearInterval(inter);
-		}
-
-	},10)
-*/
-/*
-
-	var temp = new ContinueSpiro(105,[52],[[40]],3)
-	temp.setData(CHIData);
-	temp.setPosition(200,200);
-	temp.setLineWidth(1);
-	temp.setRadius(3);
-	temp.setAlpha(40);
-	temp.draw();
-
-	var temp2 = new ContinueSpiro(210,[85],[[130]],1)
-	temp2.setData(CHIData);
-	temp2.setPosition(1200,500);
-	temp2.setLineWidth(1);
-	temp2.setRadius(4);
-	temp2.setAlpha(40);
-	temp2.draw();
-
-	var temp = new ContinueSpiro(105,[52],[[40]],1)
-	temp.setData(CHIData);
-	temp.setPosition(300,1200);
-	temp.setLineWidth(1);
-	temp.setRadius(2);
-	temp.setAlpha(30);
-	temp.draw2();
-
-	*/
-
-	//var temp2 = new ContinueSpiro(105,[52],[[40]],3)
-	var temp2 = new ContinueSpiro(210,[85],[[130]],1)
-	
-	temp2.setColor(3);
-	temp2.setData([CHITimeData[3]]);
-	temp2.setSpeed(1);
-	temp2.setPosition(400,360);
-	temp2.setLineWidth(2);
-	temp2.setRadius(2);
-	temp2.setAlpha(50);
-	temp2.draw2();
-}
 
 var temp;
 var globalInter;
@@ -623,6 +563,7 @@ function drawDemo1(){
 
 	// ten spirographs begin
 
+	addTextBox();
 
 	var $h3 = $("<h3>#CHI2013</h3>")
 	$(".demoCanvas").append($h3);
@@ -639,17 +580,17 @@ function drawDemo1(){
 
 	// first graph
 	temp = new TwitterSpiro(96,[40],[[30,27,24,21,18,15,12,9,6,3,0,-3]],1)
-	temp.$canvas.css("zoom", 1);
 	temp.setLineWidth(0.6);
 	temp.setType(1);
 	temp.setRate(timeForOneGraph/temp.nodeNum/60*1000);
+
 	temp.setIsPM(j);
 	var i = 0;
 	temp.setData(CHITimeData[i]);
-	var x = 200 * ( (i%2)*2+ j + 1 ) ;
+	var x = 200 * ( (i%2)*2+ j ) + 100 ;
 	var y = 200 * parseInt(i/2 + 1) + 50;
 	temp.setPosition(x, y);
-	temp.drawAll(10);
+	temp.drawAll(25);
 	temp.setAlpha(15);
 	temp.setStroke(1);
 	temp.setIndex(0);
@@ -677,16 +618,15 @@ function drawDemo1(){
 	globalInter = setInterval(function(){
 
 		temp = new TwitterSpiro(96,[40],[[30,27,24,21,18,15,12,9,6,3,0,-3]],1)
-		temp.$canvas.css("zoom", 1);
 		temp.setLineWidth(0.6);
 		temp.setType(1);
 		temp.setRate(timeForOneGraph/temp.nodeNum/60*1000);
 		temp.setIsPM(j);
 		temp.setData(CHITimeData[i]);
-		var x = 200 * ( (i%2)*2+ j + 1 ) ;
+		var x = 200 * ( (i%2)*2+ j ) + 100 ;
 		var y = 200 * parseInt(i/2 + 1) + 50;
 		temp.setPosition(x, y);
-		temp.drawAll(10);
+		temp.drawAll(25);
 		temp.setAlpha(15);
 		temp.setStroke(1);
 		temp.setIndex(i*2+j);
@@ -708,8 +648,6 @@ function drawDemo1(){
 		var $p = $("<p class='date'>" +monthText+" "+dateText+ ", <span></span> "+amPmText+"</p>")
 		$p.css("left", x - 100).css("top", y-10)
 		$(".demoCanvas").append($p)
-
-
 		
 		// i,j
 		j++;
@@ -738,10 +676,8 @@ function drawDemo2(){
 	//temp = new ShiftSpiro(120,[70],[[55,50,45,40,35,30,25,20]],2)
 	
 	temp = new ShiftSpiro(499,[338],[[170]])
-
-	temp.$canvas.css("zoom", 1).addClass("fast");
+	temp.$canvas.addClass("fast");
 	temp.setStrokeFill(0)
-
 	temp.setLineWidth(0.4);
 	temp.setTenDayData(CHITimeData);
 	temp.setPosition(350,350);
@@ -768,9 +704,9 @@ function drawDemo3(){
 	temp.setSpeed(10);
 	temp.setPosition(350,360);
 	temp.setLineWidth(2);
-	temp.setRadius(2);
+	temp.setBubbleRadius(2);
 	temp.setAlpha(50);
-	temp.draw2();
+	temp.draw();
 }
 
 function drawDemo4(){
@@ -790,13 +726,186 @@ function drawDemo4(){
 	temp.setSpeed(10);
 	temp.setPosition(350,400);
 	temp.setLineWidth(2);
-	temp.setRadius(2);
+	temp.setBubbleRadius(2);
 	temp.setAlpha(50);
-	temp.draw2();
+	temp.draw();
 }
 
+var startX = 300;
+var startY = 350;
+var diffY = 500;
 
 
+function drawDemo5(){
+
+
+	addTextBox();
+
+	temp = [];
+	var timeForOneGraph = 12;
+	var rate = timeForOneGraph * 1000;
+	var dateIndex = 3;
+
+	
+	for(var i = 0; i<2; i++){
+
+		temp[i] = new TwitterSpiro(96,[40],[[30,27,24,21,18,15,12,9,6,3,0,-3]],2)
+		temp[i].setLineWidth(0.6);
+		temp[i].setType(1);
+		temp[i].setStrokeFill(1)
+		temp[i].setRate(timeForOneGraph/temp[i].nodeNum/60*1000);
+		temp[i].setIsPM(i);
+		temp[i].setDay(dateIndex);
+		temp[i].setData(CHITimeData[dateIndex]);
+		temp[i].setPosition(startX,startY+i*diffY);
+		temp[i].drawAll(40);
+		temp[i].setAlpha(40);
+		temp[i].setStroke(1);
+		temp[i].setIndex(i);
+
+	
+
+
+
+		var monthText = "";
+		if(CHIDays[dateIndex][0] == 3)
+			monthText = "April"
+		else if(CHIDays[dateIndex][0] == 4)
+			monthText = "May"
+
+		var dateText = CHIDays[dateIndex][1]
+		if(temp[i].isPM)
+			var amPmText = "PM"
+		else
+			var amPmText = "AM"
+
+		var $p = $("<p class='date'>" +monthText+" "+dateText+ ", <span></span> "+amPmText+"</p>")
+		$p.css("left", startX - 100).css("top", (startY - 250)+i*diffY)
+		$(".demoCanvas").append($p)
+
+	}
+
+	temp[0].draw();
+	var c = 0
+	globalInter = setInterval(function(){
+		temp[0].stopDrawing();
+		temp[1].draw();
+		clearInterval(globalInter)
+	},13000);
+
+
+}
+
+function drawDemo6(){
+
+	addTextBox();
+
+	temp = [];
+	var timeForOneGraph = 12;
+	var rate = timeForOneGraph * 1000;
+	var dateIndex = 3;
+
+	for(var i = 0; i<2; i++){
+
+		temp[i] = new TwitterSpiro(199,[118],[[85]])
+		temp[i].$canvas.addClass("fast");
+		temp[i].setLineWidth(0.6);
+		temp[i].setType(2);
+		temp[i].setRate(10);
+		temp[i].setIsPM(i);
+		temp[i].setData(CHITimeData[dateIndex]);
+		temp[i].setPosition(startX,startY+i*diffY);
+		temp[i].drawAll(50);
+		temp[i].setAlpha(40);
+		//temp[i].setStroke(1);
+		temp[i].setDay(dateIndex);
+		temp[i].setIndex(i);
+
+		var monthText = "";
+		if(CHIDays[dateIndex][0] == 3)
+			monthText = "April"
+		else if(CHIDays[dateIndex][0] == 4)
+			monthText = "May"
+
+		var dateText = CHIDays[dateIndex][1]
+		if(temp[i].isPM)
+			var amPmText = "PM"
+		else
+			var amPmText = "AM"
+		
+		var $p = $("<p class='date'>" +monthText+" "+dateText+ ", <span></span> "+amPmText+"</p>")
+		$p.css("left", startX - 100).css("top", (startY - 200)+i*diffY)
+		$(".demoCanvas").append($p)
+	}
+
+
+		
+	temp[0].drawTypeTwo();
+	var c = 0
+	globalInter = setInterval(function(){
+		temp[0].stopDrawing();
+		temp[1].drawTypeTwo();
+		clearInterval(globalInter);
+	},7800);
+
+
+}
+
+function drawDemo7(){
+
+	addTextBox();
+
+	temp = [];
+	var timeForOneGraph = 12;
+	var rate = timeForOneGraph * 1000;
+	var dateIndex = 3;
+
+	
+	for(var i = 0; i<2; i++){
+
+		temp[i] = new TwitterSpiro(120,[70],[[55,50,45,40,35,30,25,20]],2)
+		temp[i].setLineWidth(0.6);
+		temp[i].setType(1);
+		temp[i].setStrokeFill(0)
+		temp[i].setShift(1);
+		temp[i].setRate(timeForOneGraph/temp[i].nodeNum/60*1000);
+		temp[i].setIsPM(i);
+		temp[i].setDay(dateIndex);
+		temp[i].setData(CHITimeData[dateIndex]);
+		temp[i].setPosition(startX,startY+i*diffY);
+		temp[i].drawAll(50);
+		temp[i].setAlpha(20);
+		temp[i].setStroke(1);
+		temp[i].setIndex(i);
+
+
+		var monthText = "";
+		if(CHIDays[dateIndex][0] == 3)
+			monthText = "April"
+		else if(CHIDays[dateIndex][0] == 4)
+			monthText = "May"
+
+		var dateText = CHIDays[dateIndex][1]
+		if(temp[i].isPM)
+			var amPmText = "PM"
+		else
+			var amPmText = "AM"
+
+		var $p = $("<p class='date'>" +monthText+" "+dateText+ ", <span></span> "+amPmText+"</p>")
+		$p.css("left", startX - 100).css("top", (startY - 250)+i*diffY)
+		$(".demoCanvas").append($p)
+
+	}
+
+	temp[0].draw();
+	var c = 0
+	globalInter = setInterval(function(){
+		temp[0].stopDrawing();
+		temp[1].draw();
+		clearInterval(globalInter)
+	},13000);
+
+}
 
 function addTextBox(){
 
@@ -807,7 +916,14 @@ function addTextBox(){
 function restart(){
 
 	$(".demoCanvas").html("");
-	temp.stopDrawing();
+
+	if(temp.length){
+		for(var i = 0; i<temp.length; i++)
+			temp[i].stopDrawing();
+	}
+	else
+		temp.stopDrawing();
+
 	clearInterval(globalInter);
 }
 
@@ -830,6 +946,15 @@ $(".section.demo ul li").click(function(){
 		break;
 		case 4:
 		drawDemo4();
+		break;
+		case 5:
+		drawDemo5();
+		break;
+		case 6:
+		drawDemo6();
+		break;
+		case 7:
+		drawDemo7();
 		break;
 	}
 
@@ -863,168 +988,6 @@ function drawProcessing(){
 */
 
 
-
-	
-
-		
-
-	/*
-	
-	// type 3 begin
-
-	var timeForOneGraph = 12;
-	var rate = timeForOneGraph * 1000;
-
-	temp = new ShiftSpiro(120,[70],[[55,50,45,40,35,30,25,20]],2)
-	temp.$canvas.css("zoom", 1);
-	temp.setLineWidth(0.6);
-	temp.setType(1);
-	temp.setStrokeFill(0)
-	temp.setShift(1);
-	temp.setRate(timeForOneGraph/temp.nodeNum/60*1000);
-	temp.setIsPM(0);
-	temp.setData(CHITimeData[3]);
-	temp.setPosition(250,230);
-	temp.drawAll(10);
-	temp.setAlpha(20);
-	temp.setStroke(1);
-	//temp.draw();
-
-	var monthText = "";
-	if(CHIDays[3][0] == 3)
-		monthText = "April"
-	else if(CHIDays[3][0] == 4)
-		monthText = "May"
-
-	var dateText = CHIDays[3][1]
-	if(temp.isPM)
-		var amPmText = "PM"
-	else
-		var amPmText = "AM"
-
-	var $p = $("<p class='date'>" +monthText+" "+dateText+ " "+amPmText+"</p>")
-	$p.css("left", 150).css("top", 450)
-	$("body").append($p)
-
-
-	var timeForOneGraph = 12;
-	var rate = timeForOneGraph * 1000;
-
-	temp2 = new ShiftSpiro(120,[70],[[55,50,45,40,35,30,25,20]],2)
-	temp2.$canvas.css("zoom", 1);
-	temp2.setLineWidth(0.6);
-	temp2.setType(1);
-	temp2.setStrokeFill(0)
-	temp2.setShift(1);
-	temp2.setRate(timeForOneGraph/temp2.nodeNum/60*1000);
-	temp2.setIsPM(1);
-	temp2.setData(CHITimeData[3]);
-	temp2.setPosition(750,230);
-	temp2.drawAll(10);
-	temp2.setAlpha(20);
-	temp2.setStroke(1);
-	//temp2.draw();
-
-	var monthText = "";
-	if(CHIDays[3][0] == 3)
-		monthText = "April"
-	else if(CHIDays[3][0] == 4)
-		monthText = "May"
-
-	var dateText = CHIDays[3][1]
-	if(temp.isPM)
-		var amPmText = "PM"
-	else
-		var amPmText = "AM"
-
-	var $p = $("<p class='date'>" +monthText+" "+dateText+ " "+amPmText+"</p>")
-	$p.css("left", 650).css("top", 450)
-	$("body").append($p)
-
-
-	temp.draw();
-	var c = 0
-	var inter = setInterval(function(){
-		temp2.draw();
-		c++
-		if(c)
-			clearInterval(inter)
-	},12000);
-
-	// type 3 end
-
-/*
-	// type 2 begin
-	temp = new ShiftSpiro(199,[118],[[85]])
-	temp.$canvas.css("zoom", 1);
-	temp.setLineWidth(0.6);
-	temp.setType(2);
-	temp.setRate(10);
-	temp.setIsPM(0);
-	temp.setData(CHITimeData[3]);
-	
-	temp.setPosition(200,200);
-	temp.drawAll(10);
-	temp.setAlpha(40);
-	temp.setStroke(1);
-
-	var monthText = "";
-	if(CHIDays[3][0] == 3)
-		monthText = "April"
-	else if(CHIDays[3][0] == 4)
-		monthText = "May"
-
-	var dateText = CHIDays[3][1]
-	if(temp.isPM)
-		var amPmText = "PM"
-	else
-		var amPmText = "AM"
-
-	var $p = $("<p class='date'>" +monthText+" "+dateText+ " "+amPmText+"</p>")
-	$p.css("left", 100).css("top", 380)
-	$("body").append($p)
-	
-	temp2 = new ShiftSpiro(199,[118],[[85]])
-	temp2.$canvas.css("zoom", 1);
-	temp2.setLineWidth(0.6);
-	temp2.setType(2);
-	temp2.setRate(10);
-	temp2.setIsPM(1);
-	temp2.setData(CHITimeData[3]);
-	
-	temp2.setPosition(600,200);
-	temp2.drawAll(10);
-	temp2.setAlpha(40);
-	temp2.setStroke(1);
-
-	var monthText = "";
-	if(CHIDays[3][0] == 3)
-		monthText = "April"
-	else if(CHIDays[3][0] == 4)
-		monthText = "May"
-
-	var dateText = CHIDays[3][1]
-	if(temp.isPM)
-		var amPmText = "PM"
-	else
-		var amPmText = "AM"
-
-	var $p = $("<p class='date'>" +monthText+" "+dateText+ " "+amPmText+"</p>")
-	$p.css("left", 500).css("top", 380)
-	$("body").append($p)
-
-	temp.draw2();
-
-	var c = 0
-	var inter = setInterval(function(){
-
-		temp2.draw2();
-		c++
-		if(c)
-			clearInterval(inter)
-	},7200);
-	
-	// type 2 end
 
 
 
