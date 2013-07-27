@@ -263,7 +263,7 @@ TwitterSpiro.prototype.draw = function() {
 
 	if( typeof(self.day) != "undefined" ){
 
-		$("#textBox").css("width", "400px")
+		$("#textBox").css("width", "400px").css("right", "100px")
 
 		var top = self.myindex * 500 + 100;
 		$("#textBox").css("top", top) ;
@@ -278,7 +278,7 @@ TwitterSpiro.prototype.draw = function() {
 		$("#textBox").css("top", top) ;
 
 		if(top +200 > winheight)
-			$("body").animate({scrollTop:top - 100}, '200', 'swing', function() { });
+			$("body").animate({scrollTop:top - 350}, '200', 'swing', function() { });
 	}
 
 	this.interval = setInterval(function(){
@@ -362,7 +362,7 @@ TwitterSpiro.prototype.drawTypeTwo = function() {
 	var alpha = this.alpha;
 	var totalNum = 12*60;
 
-	$("#textBox").css("width", "400px")
+	$("#textBox").css("width", "400px").css("right", "100px")
 	var top = self.myindex * 500 + 150;
 	$("#textBox").css("top", top) ;
 

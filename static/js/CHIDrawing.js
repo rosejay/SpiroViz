@@ -18,6 +18,13 @@ for(var i = 0; i<CHIDaysNum; i++){
 $("#hide").click(function(){
 	$(".navigation").fadeToggle(200);
 
+	console.log($(this).html())
+	if($(this).html() == "Hide")
+		$(this).html("Show")
+	else
+		$(this).html("Hide")
+	
+
 })
 
 var MyCHIData = function( id, name, text, month, day, hour, minute, second){
